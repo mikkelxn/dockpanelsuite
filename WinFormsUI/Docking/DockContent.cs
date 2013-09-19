@@ -250,9 +250,9 @@ namespace WeifenLuo.WinFormsUI.Docking
             DockHandler.Show(dockPanel, floatWindowBounds);
         }
 
-        public void Show(DockPane pane, IDockContent beforeContent)
+        public void Show(DockPane pane, IDockContent neighborContent, bool isBefore = true)
         {
-            DockHandler.Show(pane, beforeContent);
+            DockHandler.Show(pane, neighborContent, isBefore);
         }
 
         public void Show(DockPane previousPane, DockAlignment alignment, double proportion)

@@ -903,19 +903,22 @@ namespace WeifenLuo.WinFormsUI.Docking
             dockPanel.ResumeLayout(true, true);
         }
 
-        public void Show(DockPane pane, IDockContent beforeContent)
+        public void Show(DockPane pane, IDockContent neighborContent, bool isBefore = true)
         {
             if (pane == null)
                 throw(new ArgumentNullException(Strings.DockContentHandler_Show_NullPane));
 
-            if (beforeContent != null && pane.Contents.IndexOf(beforeContent) == -1)
+            if (neighborContent != null && pane.Contents.IndexOf(neighborContent) == -1)
                 throw(new ArgumentException(Strings.DockContentHandler_Show_InvalidBeforeContent));
 
             pane.DockPanel.SuspendLayout(true);
 
             DockPanel = pane.DockPanel;
             Pane = pane;
-            pane.SetContentIndex(Content, pane.Contents.IndexOf(beforeContent));
+            if (isBefore)
+			    pane.SetContentIndex(Content, pane.Contents.IndexOf(neighborContent));
+            else
+                pane.SetContentIndex(Content, pane.Contents.IndexOf(neighborContent) + 1);
             Show();
 
             pane.DockPanel.ResumeLayout(true, true);

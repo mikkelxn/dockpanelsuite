@@ -109,7 +109,7 @@ namespace WeifenLuo.WinFormsUI.Docking
         private const int _DocumentTabGapLeft = 3;
         private const int _DocumentTabGapRight = 3;
         private const int _DocumentIconGapBottom = 2;
-        private const int _DocumentIconGapLeft = 8;
+        private const int _DocumentIconGapLeft = 10;
         private const int _DocumentIconGapRight = 0;
         private const int _DocumentIconHeight = 16;
         private const int _DocumentIconWidth = 16;
@@ -1118,8 +1118,8 @@ namespace WeifenLuo.WinFormsUI.Docking
                     }
                     else
                     {
-                        GraphicsPath.AddLine(rect.Left, rect.Bottom, rect.Left - rect.Height / 2, rect.Bottom);
-                        GraphicsPath.AddLine(rect.Left - rect.Height / 2, rect.Bottom, rect.Left + rect.Height / 2 - curveSize / 2, rect.Top + curveSize / 2);
+                        GraphicsPath.AddLine(rect.Left, rect.Bottom, rect.Left, rect.Top + curveSize / 2);
+                        GraphicsPath.AddArc(new Rectangle(rect.Left, rect.Top, curveSize, curveSize), 180, 90);
                     }
                 }
             }
@@ -1148,8 +1148,8 @@ namespace WeifenLuo.WinFormsUI.Docking
                     }
                     else
                     {
-                        GraphicsPath.AddLine(rect.Left, rect.Bottom, rect.Left, rect.Bottom - rect.Height / 2);
-                        GraphicsPath.AddLine(rect.Left, rect.Bottom - rect.Height / 2, rect.Left + rect.Height / 2 - curveSize / 2, rect.Top + curveSize / 2);
+                        GraphicsPath.AddLine(rect.Left, rect.Bottom, rect.Left, rect.Top + curveSize / 2);
+                        GraphicsPath.AddArc(new Rectangle(rect.Left, rect.Top, curveSize, curveSize), 180, 90);
                     }
                 }
             }
@@ -1184,7 +1184,7 @@ namespace WeifenLuo.WinFormsUI.Docking
                 else
                 {
                     // Draws the top horizontal line (short side)
-                    GraphicsPath.AddLine(rect.Left + rect.Height / 2 + curveSize / 2, rect.Top, rect.Right - curveSize / 2, rect.Top);
+                    GraphicsPath.AddLine(rect.Left + curveSize / 2, rect.Top, rect.Right - curveSize / 2, rect.Top);
 
                     // Draws the rounded corner oppposite the angled side
                     GraphicsPath.AddArc(new Rectangle(rect.Right - curveSize, rect.Top, curveSize, curveSize), -90, 90);
@@ -1217,8 +1217,8 @@ namespace WeifenLuo.WinFormsUI.Docking
                     }
                     else
                     {
-                        GraphicsPath.AddLine(rect.Right, rect.Top + curveSize / 2, rect.Right, rect.Top + rect.Height / 2);
-                        GraphicsPath.AddLine(rect.Right, rect.Top + rect.Height / 2, rect.Right - rect.Height / 2, rect.Bottom);
+                        //GraphicsPath.AddLine(rect.Right, rect.Top + curveSize / 2, rect.Right, rect.Top + rect.Height / 2);
+                        //GraphicsPath.AddLine(rect.Right, rect.Top + rect.Height / 2, rect.Right - rect.Height / 2, rect.Bottom);
                     }
                 }
             }
@@ -1447,12 +1447,19 @@ namespace WeifenLuo.WinFormsUI.Docking
             if (!TabsRectangle.Contains(ptMouse))
                 return -1;
 
-            foreach (Tab tab in Tabs)
+            for (int i = 0; i < Tabs.Count; i++)
             {
-                GraphicsPath path = GetTabOutline(tab, true, false);
-                if (path.IsVisible(ptMouse))
-                    return Tabs.IndexOf(tab);
+                Rectangle rectTab = GetTabRectangle(i);
+                rectTab.Intersect(TabsRectangle);
+                if (rectTab.Contains(ptMouse))
+                    return i;
             }
+            //foreach (Tab tab in Tabs)
+            //{
+            //    GraphicsPath path = GetTabOutline(tab, true, false);
+            //    if (path.IsVisible(ptMouse))
+            //        return Tabs.IndexOf(tab);
+            //}
             return -1;
         }
 
